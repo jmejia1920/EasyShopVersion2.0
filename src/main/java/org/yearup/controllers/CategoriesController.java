@@ -28,10 +28,10 @@ public class CategoriesController
 
 
     @GetMapping
-    public List<Category> getAll(@RequestParam(name= ""))
+    public List<Category> getAll(@RequestParam(name= "name", required = false) String name,
+                                 @RequestParam(name = "description", required = false) String description)
     {
-        // find and return all categories
-        return null;
+        return categoryDao.getAllCategories(name,description);
     }
 
     // add the appropriate annotation for a get action
