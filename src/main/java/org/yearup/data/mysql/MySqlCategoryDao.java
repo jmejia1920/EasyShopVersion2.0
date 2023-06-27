@@ -49,7 +49,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        // get all categories
+
         return categories;
     }
 
@@ -71,7 +71,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        // get category by id
+
         return null;
     }
 
@@ -98,8 +98,8 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        // create a new category
-        return null;
+
+        return category;
     }
 
     @Override
@@ -111,6 +111,17 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     @Override
     public void delete(int categoryId)
     {
+        String sql = "DELETE FROM categories WHERE category_id = ?";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, categoryId);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         // delete category
     }
 
