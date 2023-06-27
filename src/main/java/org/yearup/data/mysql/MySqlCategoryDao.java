@@ -28,7 +28,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     {
         List<Category> categories = new ArrayList<>();
 
-        String sql = "SELECT * FROM easyshop " +
+        String sql = "SELECT * FROM categories " +
                 "WHERE (name = ? OR ? = '') " +
                 "   AND (description = ? OR ? = '') ";
 
@@ -53,12 +53,27 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
             throw new RuntimeException(e);
         }
         // get all categories
-        return null;
+        return categories;
     }
 
     @Override
     public Category getById(int categoryId)
     {
+        String sql = "SELECT * FROM categories WHERE category_id = ?";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, categoryId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return mapRow(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         // get category by id
         return null;
     }
