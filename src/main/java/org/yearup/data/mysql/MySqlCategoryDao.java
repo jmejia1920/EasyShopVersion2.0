@@ -18,28 +18,18 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     public MySqlCategoryDao(DataSource dataSource)
     {
         super(dataSource);
+        this.dataSource = dataSource;
     }
 
     @Override
-    public List<Category> getAllCategories(String name, String description)
+    public List<Category> getAllCategories()
     {
         List<Category> categories = new ArrayList<>();
 
-        String sql = "SELECT * FROM categories " +
-                "WHERE (name = ? OR ? = '') " +
-                "   AND (description = ? OR ? = '') ";
-
-        name = name == null ? "" : name;
-        description = description == null ? "" : description;
+        String sql = "SELECT * FROM categories";
 
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, name);
-            statement.setString(2, name);
-            statement.setString(3, description);
-            statement.setString(4, description);
-
-
             ResultSet row = statement.executeQuery();
 
             while (row.next()) {
@@ -47,7 +37,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
                 categories.add(category);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
         return categories;
